@@ -1,0 +1,17 @@
+{
+  "eslint.workingDirectories": [
+    { "pattern": "./packages/*/", "mode": "auto" }
+    // { "directory": "packages/api", "changeProcessCWD": true, "mode": "auto" },
+    // { "directory": "packages/website", "changeProcessCWD": true },
+    // { "directory": "packages/shared", "changeProcessCWD": true },
+    // { "directory": "packages/service", "changeProcessCWD": true }
+  ],
+  "typescript.preferences.importModuleSpecifierEnding": "js",
+  "conventionalCommits.scopes": [
+    "root",
+    "packages/api",
+    "packages/website",
+    "packages/shared",
+    "packages/service"
+  ]
+}

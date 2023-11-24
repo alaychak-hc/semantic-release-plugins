@@ -1,0 +1,19 @@
+{
+  "recommendations": [
+    "vivaxy.vscode-conventional-commits",
+    "mikestead.dotenv",
+    "usernamehw.errorlens",
+    "dbaeumer.vscode-eslint",
+    "eamodio.gitlens",
+    "visualstudioexptteam.vscodeintellicode",
+    "ms-vscode.vscode-typescript-next",
+    "doggy8088.quicktype-refresh",
+    "esbenp.prettier-vscode",
+    "richie5um2.vscode-sort-json",
+    "yatki.vscode-surround",
+    "gruntfuggly.todo-tree",
+    "mattpocock.ts-error-translator",
+    "github.vscode-github-actions",
+    "zixuanchen.vitest-explorer"
+  ]
+}

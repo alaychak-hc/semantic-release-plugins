@@ -1,0 +1,39 @@
+# Ignore all NodeJS libraries
+node_modules
+
+# Ignore VS Code project settings, except the suggested extensions (for new users) and workspace settings (required for the workspace ESLint setup)
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+
+# Ignore history files (from the File History extension, if enabled)
+**/.history
+
+# Ignore all output files (e.g. line count/lint)
+out
+
+# Ignore developer notes
+notes.txt
+
+# Ignore todo files
+**/todo.txt
+
+# Ignore .env files (except sample .env files)
+.env*
+!.env.sample
+
+# Ignore backup folders
+**/backups
+
+# Ignore .DS_Store files
+.DS_Store
+
+# Ignore types
+./types.d.ts
+./types
+
+# Ignore .npmrc file
+.npmrc
+
+# Ignore data files
+**/drizzle/data/sql

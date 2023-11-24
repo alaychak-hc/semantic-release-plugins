@@ -1,0 +1,4 @@
+auto.config.mts
+**/node_modules/**
+**/dist/**
+scripts/**/*

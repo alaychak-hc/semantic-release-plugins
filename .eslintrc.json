@@ -1,0 +1,81 @@
+{
+  "extends": ["@alaychak-hc/eslint-config-monorepo"],
+  "root": true,
+  "parserOptions": {
+    "ecmaVersion": 2020,
+    "sourceType": "module",
+    "project": "./tsconfig.json"
+  },
+  "overrides": [
+    {
+      "files": ["packages/ms-teams/**/*.ts"],
+      "extends": [
+        "@alaychak-hc/eslint-config-monorepo/node",
+        "@alaychak-hc/eslint-config-monorepo/ts",
+        "@alaychak-hc/eslint-config-monorepo/type-graphql"
+      ],
+      "rules": {
+        "@typescript-eslint/comma-dangle": [
+          "error",
+          {
+            "arrays": "always-multiline",
+            "exports": "always-multiline",
+            "functions": "never",
+            "imports": "always-multiline",
+            "objects": "always-multiline",
+            "enums": "always-multiline"
+          }
+        ],
+        "@typescript-eslint/consistent-type-imports": [
+          "error",
+          { "prefer": "type-imports" }
+        ],
+        "max-lines": "off",
+        "no-undefined": "off",
+        "@typescript-eslint/no-magic-numbers": "off",
+        "import/no-default-export": "error",
+        "etc/no-enum": "off",
+        "etc/no-deprecated": "off",
+        "etc/no-internal": "off",
+        "n/no-missing-import": "off",
+        "n/no-process-env": "off",
+        "n/no-sync": "off",
+        "n/file-extension-in-import": "off",
+        "import/no-unused-modules": [
+          "error",
+          {
+            "unusedExports": true,
+            "ignoreExports": [
+              "**/schema/types/tables/*.ts",
+              "**/database/models/*.ts",
+              "**/vitest.config.ts"
+            ]
+          }
+        ]
+      },
+      "parser": "@typescript-eslint/parser",
+      "parserOptions": {
+        "ecmaVersion": "latest",
+        "sourceType": "module",
+        "project": "tsconfig.eslint.json"
+      },
+      "settings": {
+        "import/resolver": {
+          "node": {
+            "moduleDirectory": [
+              "packages/ms-teams/node_modules",
+              "packages/ms-teams/src"
+            ]
+          },
+          "typescript": {
+            "project": "packages/ms-teams/tsconfig.json"
+          }
+        }
+      },
+      "env": {
+        "browser": false,
+        "node": true
+      }
+    }
+  ]
+}

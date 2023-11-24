@@ -1,0 +1,58 @@
+// #region Developer Information
+/*
+ ********************************************
+  Author: Andrew Laychak
+  Email: ALaychak@HarrisComputer.com
+  
+  Created At: 11-23-2023 11:01:09 PM
+  Last Modified: 11-23-2023 11:01:49 PM
+  Last Updated By: Andrew Laychak
+  
+  Description: 
+  
+  References:
+    - https://www.typescriptlang.org/tsconfig
+    - https://www.typescriptlang.org/docs/handbook/compiler-options.html
+ ********************************************
+*/
+// #endregion
+
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "lib": ["esnext", "esnext.asynciterable"],
+    "sourceMap": false,
+    "inlineSourceMap": false,
+    "declaration": false,
+    // "declarationDir": "./types",
+    "typeRoots": ["./typings", "./node_modules/@types"],
+    "declarationMap": false,
+    "removeComments": true,
+    "outDir": "./dist",
+    "rootDir": "./",
+    "strict": true,
+    "allowJs": false,
+    "checkJs": false,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "baseUrl": "./",
+    "paths": {
+      "@msteams/*": ["./packages/ms-teams/src/*"]
+    },
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "plugins": [{ "transform": "typescript-transform-paths" }]
+  }
+  // "include": [],
+  // "exclude": []
+}
