@@ -1,6 +1,6 @@
 {
   "name": "@alaychak-hc/semantic-release-plugins-ms-teams",
-  "version": "0.0.008",
+  "version": "0.0.009",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -16,6 +16,7 @@
     "README.md"
   ],
   "scripts": {
+    "prepublish": "pnpm build",
     "build": "tsc --p ./tsconfig.build.json",
     "build:pack": "pnpm build && pnpm pack && pnpm clean",
     "clean": "rimraf ./dist",
