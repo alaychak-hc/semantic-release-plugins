@@ -1,0 +1,47 @@
+{
+  "name": "@alaychak-hc/semantic-release-plugins-pnpm",
+  "version": "0.0.002",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:alaychak-hc/semantic-release-plugins.git"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "prepublish": "pnpm build",
+    "build": "tsc --p ./tsconfig.build.json",
+    "build:pack": "pnpm build && pnpm pack && pnpm clean",
+    "clean": "rimraf ./dist",
+    "publish:pnpm": "pnpm publish --force --no-git-checks",
+    "publish:pnpm:local": "pnpm publish --dry-run --force --no-git-checks"
+  },
+  "devDependencies": {
+    "@semantic-release/error": "^4.0.0",
+    "@types/node": "^20.9.5",
+    "@types/normalize-path": "^3.0.2",
+    "@types/semantic-release": "^20.0.6",
+    "@types/semantic-release__error": "^3.0.3",
+    "globby": "^14.0.0",
+    "normalize-path": "^3.0.0",
+    "p-map": "^6.0.0",
+    "rimraf": "^5.0.5",
+    "semantic-release": "^22.0.8",
+    "simple-git": "^3.21.0",
+    "typescript": "^5.2.2",
+    "yaml": "^2.3.4"
+  },
+  "dependencies": {
+    "@semantic-release/commit-analyzer": "^11.1.0",
+    "@semantic-release/release-notes-generator": "^12.1.0",
+    "aggregate-error": "^5.0.0",
+    "find-up": "^7.0.0"
+  }
+}
