@@ -1,0 +1,31 @@
+{
+  "folders": [
+    {
+      "name": "Root",
+      "path": ".."
+    },
+    {
+      "name": "PNPM",
+      "path": "../packages/pnpm"
+    },
+    {
+      "name": "Microsoft Teams",
+      "path": "../packages/ms-teams"
+    },
+    {
+      "name": "JIRA",
+      "path": "../packages/jira"
+    }
+  ],
+  "settings": {
+    "conventionalCommits.scopes": [
+      "root",
+      "packages/ms-teams",
+      "packages/jira"
+    ],
+    "typescript.tsdk": "API\\node_modules\\typescript\\lib"
+  },
+  "extensions": {
+    "recommendations": []
+  }
+}

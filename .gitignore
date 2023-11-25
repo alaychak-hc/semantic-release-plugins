@@ -3,6 +3,7 @@ node_modules
 
 # Ignore VS Code project settings, except the suggested extensions (for new users) and workspace settings (required for the workspace ESLint setup)
 .vscode/*
+!.vscode/*.code-workspace
 !.vscode/extensions.json
 !.vscode/settings.json
 
