@@ -5,7 +5,7 @@
     Email: ALaychak@harriscomputer.com
 
     Created At: 08-01-2022 09:48:49 AM
-    Last Modified: 11-24-2023 06:43:40 PM
+    Last Modified: 11-25-2023 07:07:50 PM
     Last Updated By: Andrew Laychak
 
     Description: 
@@ -27,7 +27,6 @@ async function generate(
   context: GenerateNotesContextWithOptions
 ): Promise<string> {
   const { includeAll, name } = pluginConfig;
-
   const newContext = context;
 
   if (includeAll !== true) {
@@ -46,7 +45,21 @@ async function generate(
   }
 
   newContext.nextRelease.version = `${name} - v${newContext.nextRelease.version}`;
-  const releaseNotes = await generateNotes(pluginConfig, newContext);
+  let releaseNotes = await generateNotes(pluginConfig, newContext);
+
+  const { nextRelease } = newContext;
+  if (nextRelease && nextRelease.notes) {
+    releaseNotes = nextRelease.notes;
+  }
+
+  console.log('INITIAL RELEASE NOTES: ', releaseNotes);
+  releaseNotes = releaseNotes.replace(
+    /\(\[([0-9a-f]{7,40})\]\(https:\/\/github\.com\//g,
+    '\\([$1](https://github.com/'
+  );
+
+  process.env.HAS_PREVIOUS_SEM_REL_EXECUTION = 'true';
+  console.log('NEW RELEASE NOTES: ', releaseNotes);
 
   return releaseNotes;
 }
