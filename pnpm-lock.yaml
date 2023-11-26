@@ -8,6 +8,43 @@ importers:
 
   .: {}
 
+  packages/changelog:
+    dependencies:
+      '@semantic-release/release-notes-generator':
+        specifier: ^12.1.0
+        version: 12.1.0(semantic-release@22.0.8)
+      aggregate-error:
+        specifier: ^5.0.0
+        version: 5.0.0
+      fs-extra:
+        specifier: ^11.1.1
+        version: 11.1.1
+    devDependencies:
+      '@semantic-release/error':
+        specifier: ^4.0.0
+        version: 4.0.0
+      '@types/fs-extra':
+        specifier: ^11.0.4
+        version: 11.0.4
+      '@types/node':
+        specifier: ^20.9.5
+        version: 20.9.5
+      '@types/semantic-release':
+        specifier: ^20.0.6
+        version: 20.0.6
+      '@types/semantic-release__error':
+        specifier: ^3.0.3
+        version: 3.0.3
+      rimraf:
+        specifier: ^5.0.5
+        version: 5.0.5
+      semantic-release:
+        specifier: ^22.0.8
+        version: 22.0.8(typescript@5.2.2)
+      typescript:
+        specifier: ^5.2.2
+        version: 5.2.2
+
   packages/jira:
     dependencies:
       '@semantic-release/release-notes-generator':
@@ -406,6 +443,19 @@ packages:
     dependencies:
       '@types/ms': 0.7.34
     dev: false
+
+  /@types/fs-extra@11.0.4:
+    resolution: {integrity: sha512-yTbItCNreRooED33qjunPthRcSjERP1r4MqCZc7wv0u2sUkzTFp45tgUfS5+r7FrZPdmCCNflLhVSP/o+SemsQ==}
+    dependencies:
+      '@types/jsonfile': 6.1.4
+      '@types/node': 20.9.5
+    dev: true
+
+  /@types/jsonfile@6.1.4:
+    resolution: {integrity: sha512-D5qGUYwjvnNNextdU59/+fI+spnwtTFmyQP0h+PfIOSkNfpU6AOICUOkm4i0OnSk+NyjdPJrxCDro0sJsWlRpQ==}
+    dependencies:
+      '@types/node': 20.9.5
+    dev: true
 
   /@types/mdast@4.0.3:
     resolution: {integrity: sha512-LsjtqsyF+d2/yFOYaN22dHZI1Cpwkrj+g06G8+qtUKlhovPW89YhqSnfKtMbkgmEtYpH2gydRNULd6y8mciAFg==}

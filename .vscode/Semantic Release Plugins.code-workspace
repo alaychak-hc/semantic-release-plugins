@@ -15,6 +15,10 @@
     {
       "name": "JIRA",
       "path": "../packages/jira"
+    },
+    {
+      "name": "Changelog",
+      "path": "../packages/changelog"
     }
   ],
   "settings": {
