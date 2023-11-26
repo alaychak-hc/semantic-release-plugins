@@ -5,7 +5,7 @@
   Email: ALaychak@HarrisComputer.com
   
   Created At: 11-23-2023 11:52:32 PM
-  Last Modified: 11-24-2023 04:40:43 PM
+  Last Modified: 11-25-2023 12:57:38 AM
   Last Updated By: Andrew Laychak
   
   Description: Main index file that will send a release note to MS Teams.
@@ -25,6 +25,7 @@ import {
   GenerateNotesContextWithOptions,
   SuccessContextWithOptions,
 } from './interfaces/with-options.js';
+import { canNotify } from './can-notify.js';
 // #endregion
 
 // #region Variables
@@ -62,7 +63,7 @@ const success = async (
   pluginConfig: PluginOptions,
   context: SuccessContextWithOptions
 ) => {
-  if (verified) {
+  if (verified && canNotify(context)) {
     await sendMessage(pluginConfig, context);
   }
 };
