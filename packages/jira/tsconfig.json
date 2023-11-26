@@ -15,6 +15,6 @@
     "allowSyntheticDefaultImports": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["lib"],
+  "include": ["lib", "../pnpm/lib/can-modify.ts"],
   "exclude": ["node_modules", "dist"]
 }

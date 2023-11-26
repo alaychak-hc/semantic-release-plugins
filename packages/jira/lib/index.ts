@@ -5,10 +5,13 @@
   Email: ALaychak@HarrisComputer.com
   
   Created At: 11-23-2023 11:52:32 PM
-  Last Modified: 11-24-2023 05:36:00 PM
+  Last Modified: 11-25-2023 06:24:10 PM
   Last Updated By: Andrew Laychak
   
   Description: Main index file that will send a release note to MS Teams.
+
+  Notes:
+    - In dry run, this will not update the [JIRA-XYZ] links in the release notes. This is because the release notes are not generated until the prepare step. I can't update it in generateNotes step because returning the new value will concatenate the values from other plugins. This is a limitation of Semantic Release (as of 11/24/2023). The notes are properly update when not in dry run.
   
   References:
     - None
@@ -20,8 +23,8 @@
 import { verifyConfiguration } from './verify-config.js';
 import { PluginOptions } from './interfaces/plugin-options.js';
 import { VerifyConditionsContext } from 'semantic-release';
-import { GenerateNotesContextWithOptions } from './interfaces/with-options.js';
-import { jiraGenerateNotes } from './generate-notes.js';
+import { PrepareContextWithOptions } from './interfaces/with-options.js';
+import { prepareNotes } from './prepare-notes.js';
 // #endregion
 
 // #region Variables
@@ -40,16 +43,16 @@ const verifyConditions = (
 // #endregion
 
 // #region Generate Notes
-const generateNotes = async (
+const prepare = async (
   pluginConfig: PluginOptions,
-  context: GenerateNotesContextWithOptions
+  context: PrepareContextWithOptions
 ) => {
   if (verified) {
-    jiraGenerateNotes(pluginConfig, context);
+    await prepareNotes(pluginConfig, context);
   }
 };
 // #endregion
 
 // #region Exports
-export { verifyConditions, generateNotes };
+export { verifyConditions, prepare };
 // #endregion
