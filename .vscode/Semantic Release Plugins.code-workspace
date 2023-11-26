@@ -26,7 +26,8 @@
       "root",
       "packages/ms-teams",
       "packages/jira",
-      "packages/pnpm"
+      "packages/pnpm",
+      "packages/changelog"
     ],
     "typescript.tsdk": "API\\node_modules\\typescript\\lib"
   },
