@@ -24,7 +24,6 @@ async function prepareNotes(
   if (!ticketPrefixes) {
     issueRegex = new RegExp(ISSUE_REGEX, 'g');
   } else if (ticketPrefixes.length > 0) {
-    // issueRegex = new RegExp(`((${ticketPrefixes.join('|')})-[1-9][0-9]*)`, 'g');
     issueRegex = new RegExp(
       `(\\[)?(${ticketPrefixes.join('|')}-[1-9][0-9]*)(\\])?`,
       'g'
