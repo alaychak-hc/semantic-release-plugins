@@ -5,7 +5,7 @@
     Email: ALaychak@harriscomputer.com
 
     Created At: 08-03-2022 12:18:05 PM
-    Last Modified: 11-24-2023 06:41:38 PM
+    Last Modified: 11-25-2023 10:11:06 PM
     Last Updated By: Andrew Laychak
 
     Description: 
@@ -89,6 +89,7 @@ async function getCommitFilesByPackage(
         .split('\n')
         .filter((f) => f)
         .map((f) => f.trim());
+
       diffSplit.forEach((f) => {
         if (includeAll) {
           finalFiles.add(hash);
