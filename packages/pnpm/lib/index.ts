@@ -5,7 +5,7 @@
   Email: ALaychak@HarrisComputer.com
   
   Created At: 11-23-2023 11:52:32 PM
-  Last Modified: 11-28-2023 01:37:48 AM
+  Last Modified: 11-28-2023 02:11:23 AM
   Last Updated By: Andrew Laychak
   
   Description: Main index file that will send a release note to MS Teams.
@@ -56,12 +56,7 @@ const success = async (
   pluginConfig: PluginOptions,
   context: SuccessContextWithOptions
 ) => {
-  const hasPreviouslyExecuted =
-    process.env.HAS_PREVIOUS_SEM_REL_EXECUTION === 'true';
-
-  if (hasPreviouslyExecuted === false) {
-    await sendMessage(pluginConfig, context);
-  }
+  await sendMessage(pluginConfig, context);
 };
 // #endregion
 
