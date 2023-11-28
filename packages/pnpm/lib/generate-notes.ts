@@ -5,7 +5,7 @@
     Email: ALaychak@harriscomputer.com
 
     Created At: 08-01-2022 09:48:49 AM
-    Last Modified: 11-28-2023 12:58:00 AM
+    Last Modified: 11-28-2023 02:01:15 AM
     Last Updated By: Andrew Laychak
 
     Description: 
@@ -195,16 +195,24 @@ function convertJiraIssuesToLink(jiraOptions: JiraOptions, text: string) {
 
 async function getCommit(
   commit: GroupCommitDetails,
-  jiraOptions?: JiraOptions
+  jiraOptions?: JiraOptions,
+  context?: GenerateNotesContextWithOptions
   // _commitOptions: CommitOptions,
-  // _context: GenerateNotesContextWithOptions
 ) {
+  let repositoryUrl = context?.options?.repositoryUrl;
+  if (repositoryUrl !== undefined) {
+    repositoryUrl = repositoryUrl
+      .replace('.git', '')
+      .replace('git@github.com:', 'https://github.com/');
+  }
+
   const titleTemplatePath = slash(
     path.join(getDirectory(import.meta.url), 'templates/commit.hbs')
   );
 
   let renderedTemplate = await viewInstance.render(titleTemplatePath, {
     commit,
+    repositoryUrl,
   });
 
   if (jiraOptions) {
@@ -325,7 +333,11 @@ async function generate(
     releaseNotes += `\n\n${formattedGroupTitle}`;
 
     for (const commit of group.commits) {
-      const commitText = await getCommit(commit, pluginConfig.jiraOptions);
+      const commitText = await getCommit(
+        commit,
+        pluginConfig.jiraOptions,
+        context
+      );
 
       releaseNotes += `\n${commitText}`;
 
@@ -542,12 +554,6 @@ async function generate(
       });
   } else {
     logger.log(`Skippping git commit and push for CHANGELOG.md`);
-  }
-
-  if (!isDryRunMode) {
-    await git.addTag(context.nextRelease.gitTag);
-  } else {
-    logger.log(`Skippping git tag: ${context.nextRelease.gitTag}`);
   }
 
   process.env.HAS_PREVIOUS_SEM_REL_EXECUTION = 'true';

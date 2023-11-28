@@ -5,7 +5,7 @@
   Email: ALaychak@HarrisComputer.com
   
   Created At: 11-23-2023 11:52:32 PM
-  Last Modified: 11-25-2023 09:38:54 PM
+  Last Modified: 11-28-2023 01:37:48 AM
   Last Updated By: Andrew Laychak
   
   Description: Main index file that will send a release note to MS Teams.
@@ -22,8 +22,10 @@ import { PluginOptions } from './interfaces/plugin-options.js';
 import {
   AnalyzeCommitContextWithOptions,
   GenerateNotesContextWithOptions,
+  SuccessContextWithOptions,
 } from './interfaces/with-options.js';
 import { analyze } from './analyze.js';
+import { sendMessage } from './send-message.js';
 // #endregion
 
 // #region Verify Conditions
@@ -49,6 +51,20 @@ async function generateNotes(
 }
 // #endregion
 
+// #region Success
+const success = async (
+  pluginConfig: PluginOptions,
+  context: SuccessContextWithOptions
+) => {
+  const hasPreviouslyExecuted =
+    process.env.HAS_PREVIOUS_SEM_REL_EXECUTION === 'true';
+
+  if (hasPreviouslyExecuted === false) {
+    await sendMessage(pluginConfig, context);
+  }
+};
+// #endregion
+
 // #region Exports
-export { analyzeCommits, generateNotes };
+export { analyzeCommits, generateNotes, success };
 // #endregion
