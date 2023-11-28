@@ -5,7 +5,7 @@
     Email: ALaychak@harriscomputer.com
 
     Created At: 08-01-2022 09:48:49 AM
-    Last Modified: 11-27-2023 04:25:51 PM
+    Last Modified: 11-28-2023 12:58:00 AM
     Last Updated By: Andrew Laychak
 
     Description: 
@@ -33,12 +33,12 @@ import { create } from 'express-handlebars';
 import { getDirectory } from './utilities/folder-path.js';
 import slash from 'slash';
 import path from 'path';
-import { format } from 'date-fns';
 import pMap from 'p-map';
 import * as emoji from 'node-emoji';
-import merge from 'deepmerge';
 import fs from 'fs-extra';
-// import { simpleGit, CleanOptions } from 'simple-git';
+import { simpleGit } from 'simple-git';
+import { mergeOptions } from './merged-options.js';
+import { sendMessage } from './send-message.js';
 // #endregion
 
 type ChangelogData = {
@@ -72,68 +72,16 @@ const changelogData: ChangelogData = {};
 const groupedCommits: Group[] = [];
 const groupedCommitsByScope: GroupByScope[] = [];
 
-const defaultOptions = {
-  includeAll: false,
-  titleOptions: {
-    name: 'Release Notes',
-    includeCompareLink: true,
-    date: 'yyyy-MM-dd',
-  },
-  commitOptions: {
-    groupByScope: true,
-    groups: [
-      {
-        id: 'fixes',
-        type: 'fix',
-        section: ':bug: Fixes',
-      },
-      {
-        id: 'refactor',
-        type: 'refactor',
-        section: ':bug: Refactor',
-      },
-      {
-        id: 'documentation',
-        type: 'docs',
-        section: ':sparkles: Documentation',
-      },
-      {
-        id: 'build',
-        type: 'build',
-        section: ':building_construction: Build',
-      },
-      {
-        id: 'chores',
-        type: 'chore',
-        section: ':sparkles: Chores',
-      },
-    ],
-  },
-  sort: {
-    groups: ['fixes', 'refactor', 'documentation', 'build', 'chores'],
-    commits: ['fix', 'refactor', 'docs', 'build', 'chore'],
-  },
-};
-
 const viewInstance = create({
   layoutsDir: `${getDirectory(import.meta.url)}/templates`,
   extname: '.hbs',
   handlebars: handlebars.create(),
-  helpers: {},
+  helpers: {
+    removeSkipCi: (text: string) => {
+      return text.replace('[skip ci]', '').trim();
+    },
+  },
 });
-
-function mergeOptions(options: PluginOptions) {
-  let mergedOptions = merge(defaultOptions, options, {
-    arrayMerge: (_destinationArray, sourceArray) => sourceArray,
-  });
-
-  mergedOptions.titleOptions = {
-    ...mergedOptions.titleOptions,
-    date: format(new Date(), mergedOptions.titleOptions.date),
-  };
-
-  return mergedOptions;
-}
 
 // #region Title
 async function getTitle(
@@ -145,7 +93,14 @@ async function getTitle(
 
   const previousTag = lastRelease.gitTag || lastRelease.gitHead;
   const currentTag = nextRelease.gitTag || nextRelease.gitHead;
-  const compareLink = `https://github.com/alaychak-hc/SecureConnect-API2/compare/${previousTag}...${currentTag}`;
+
+  let repositoryUrl = context?.options?.repositoryUrl;
+  if (repositoryUrl !== undefined) {
+    repositoryUrl = repositoryUrl
+      .replace('.git', '')
+      .replace('git@github.com:', 'https://github.com/');
+  }
+  const compareLink = `${repositoryUrl}/compare/${previousTag}...${currentTag}`;
 
   const titleTemplatePath = slash(
     path.join(getDirectory(import.meta.url), 'templates/title.hbs')
@@ -329,6 +284,9 @@ async function generate(
   pluginConfig: PluginOptions,
   context: GenerateNotesContextWithOptions
 ): Promise<string> {
+  const { logger, options: contextOptions } = context;
+  const isDryRunMode = contextOptions.dryRun === true;
+
   const { includeAll } = pluginConfig;
   const newContext = context;
 
@@ -378,25 +336,24 @@ async function generate(
           changelogData[commit.ccCommit.scope] = [
             {
               title: formattedGroupTitle,
-              commits: [`\n${commitText}`],
+              commits: [commitText],
             },
           ];
         } else {
-          const hasCommitTitle = changelogData[commit.ccCommit.scope].find(
+          const changelogCommitData = changelogData[commit.ccCommit.scope].find(
             (group) => group.title === formattedGroupTitle
           );
-          if (hasCommitTitle !== undefined) {
+
+          if (changelogCommitData === undefined) {
             changelogData[commit.ccCommit.scope] = [
+              ...changelogData[commit.ccCommit.scope],
               {
                 title: formattedGroupTitle,
-                commits: [`\n${commitText}`],
+                commits: [commitText],
               },
             ];
           } else {
-            changelogData[commit.ccCommit.scope].push({
-              title: `\n${formattedGroupTitle}`,
-              commits: [`\n${commitText}`],
-            });
+            changelogCommitData.commits.push(commitText);
           }
         }
       }
@@ -439,11 +396,11 @@ async function generate(
     });
   }
 
-  // const git = simpleGit({
-  //   baseDir: options.cwd,
-  //   binary: 'git',
-  //   maxConcurrentProcesses: 6,
-  // });
+  const git = simpleGit({
+    baseDir: options.cwd,
+    binary: 'git',
+    maxConcurrentProcesses: 6,
+  });
 
   const updateChangelog = async (scope: string) => {
     let directory = options.cwd;
@@ -476,38 +433,43 @@ async function generate(
         const formattedGroupTitle = currentValue.title;
         const formattedCommits = currentValue.commits.join('\n');
 
-        return `${previousValue}\n${formattedGroupTitle}\n${formattedCommits}`;
+        return `${previousValue}\n${formattedGroupTitle}\n\n${formattedCommits}\n`;
       },
       ''
     );
 
     const changelogPath = path.join(directory, `${changelogFilename}.md`);
-    const changelogText = fs.readFileSync(changelogPath, 'utf8');
+    const changelogText =
+      fs.existsSync(changelogPath) === false
+        ? ''
+        : fs.readFileSync(changelogPath, 'utf8');
 
     if (changelogText === '') {
-      const newChangelogText = `${releaseNotesTitle}\n${changelogNewText}\n`;
-      fs.writeFileSync(changelogPath, newChangelogText);
+      const newChangelogText = `${releaseNotesTitle}\n${changelogNewText}`;
+      await fs.writeFile(changelogPath, newChangelogText);
 
-      // await git.addConfig('user.name', 'semantic-release-bot');
-      // await git.addConfig('user.email', 'semantic-release-bot@martynus.net');
-      // await git.add(changelogPath);
+      if (!isDryRunMode) {
+        await git.add(changelogPath);
+      } else {
+        logger.log(`Skippping git add for ${changelogPath}`);
+      }
       return;
     }
 
-    const newChangelogText = `${releaseNotesTitle}\n${changelogNewText}\n\n${changelogText}\n`;
-    fs.writeFileSync(changelogPath, newChangelogText);
+    const newChangelogText = `${releaseNotesTitle}\n${changelogNewText}\n${changelogText}`;
+    await fs.writeFile(changelogPath, newChangelogText);
 
-    // await git.addConfig('user.name', 'semantic-release-bot');
-    // await git.addConfig('user.email', 'semantic-release-bot@martynus.net');
-    // await git.add(changelogPath);
+    if (!isDryRunMode) {
+      await git.add(changelogPath);
+    } else {
+      logger.log(`Skippping git add for ${changelogPath}`);
+    }
   };
 
   const scopes = Array.from(uniqueScopes);
   await pMap(scopes, updateChangelog, {
     concurrency: 1,
   });
-
-  console.log('CHANGELOG DATA: ', JSON.stringify(changelogData, null, 2));
 
   let newChangelogTextAll = '';
   const rootChangelogPath = path.join(options.cwd, 'CHANGELOG.md');
@@ -526,10 +488,16 @@ async function generate(
       newChangelogTextAll += `${releaseNotesTitle}\n\n`;
     }
 
-    newChangelogTextAll += `${formattedPackageTitle}\n\n---\n\n`;
+    newChangelogTextAll += `${formattedPackageTitle}\n\n`;
 
-    packageChangelogData.forEach((group) => {
-      newChangelogTextAll += `${group.title}\n${group.commits.join('\n')}\n`;
+    packageChangelogData.forEach((group, index) => {
+      newChangelogTextAll += `${group.title}\n\n${group.commits.join('\n')}`;
+
+      if (index !== packageChangelogData.length - 1) {
+        newChangelogTextAll += '\n\n';
+      } else if (index === packageChangelogData.length - 1) {
+        newChangelogTextAll += '\n';
+      }
     });
 
     if (index !== scopes.length - 1) {
@@ -544,12 +512,57 @@ async function generate(
       concurrency: 1,
     });
 
-    fs.writeFileSync(rootChangelogPath, newChangelogTextAll);
+    const rootChangelogText =
+      fs.existsSync(rootChangelogPath) === false
+        ? ''
+        : fs.readFileSync(rootChangelogPath, 'utf8');
+
+    if (rootChangelogText === '') {
+      await fs.writeFile(rootChangelogPath, newChangelogTextAll);
+    } else {
+      const newChangelogTextAll2 = `${newChangelogTextAll}\n${rootChangelogText}`;
+      await fs.writeFile(rootChangelogPath, newChangelogTextAll2);
+    }
+
+    if (!isDryRunMode) {
+      await git.add(rootChangelogPath);
+    } else {
+      logger.log(`Skippping git add for ${rootChangelogPath}`);
+    }
   }
 
-  // git.commit('docs: Update CHANGELOG.md [skip ci]');
+  if (!isDryRunMode) {
+    git
+      .commit('docs: Update CHANGELOG.md [skip ci]', {
+        '--author':
+          '"semantic-release-bot <semantic-release-bot@martynus.net>"',
+      })
+      .then(() => {
+        git.push();
+      });
+  } else {
+    logger.log(`Skippping git commit and push for CHANGELOG.md`);
+  }
+
+  if (!isDryRunMode) {
+    await git.addTag(context.nextRelease.gitTag);
+  } else {
+    logger.log(`Skippping git tag: ${context.nextRelease.gitTag}`);
+  }
 
   process.env.HAS_PREVIOUS_SEM_REL_EXECUTION = 'true';
+
+  if (isDryRunMode) {
+    logger.log(
+      `Will publish actual release notes in MS Teams after 'prepare' event`
+    );
+
+    const notifyInDryRun = options.msTeamsOptions?.notifyInDryRun === true;
+
+    if (notifyInDryRun) {
+      await sendMessage(pluginConfig, context, releaseNotes);
+    }
+  }
 
   return releaseNotes;
 }

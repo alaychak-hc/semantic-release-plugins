@@ -1,6 +1,6 @@
 {
   "name": "@alaychak-hc/semantic-release-plugins-pnpm",
-  "version": "0.0.004",
+  "version": "0.0.006",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -55,7 +55,9 @@
     "find-up": "^7.0.0",
     "fs-extra": "^11.1.1",
     "handlebars": "^4.7.8",
+    "mdast-util-to-markdown": "^2.1.0",
     "node-emoji": "^2.1.3",
+    "remark": "^15.0.1",
     "slash": "^5.1.0"
   }
 }

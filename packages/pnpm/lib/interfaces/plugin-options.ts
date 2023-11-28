@@ -5,7 +5,7 @@
   Email: ALaychak@HarrisComputer.com
   
   Created At: 11-23-2023 11:41:25 PM
-  Last Modified: 11-27-2023 03:10:23 PM
+  Last Modified: 11-28-2023 12:15:39 AM
   Last Updated By: Andrew Laychak
   
   Description: Type for the plugin options.
@@ -56,6 +56,15 @@ type ChangelogOptions = {
   };
 };
 
+type MsTeamsOptions = {
+  webhookUrl: string;
+  webhookUrlDryRun?: string;
+  title?: string;
+  imageUrl?: string;
+  showContributors?: boolean;
+  notifyInDryRun?: boolean;
+};
+
 // #region Plugin Options
 type PluginOptions = {
   cwd?: string;
@@ -69,6 +78,7 @@ type PluginOptions = {
     groups?: string[];
     commits?: string[];
   };
+  msTeamsOptions?: MsTeamsOptions;
 };
 // #endregion
 
