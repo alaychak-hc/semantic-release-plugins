@@ -5,7 +5,7 @@
     Email: ALaychak@harriscomputer.com
 
     Created At: 08-01-2022 09:48:49 AM
-    Last Modified: 11-28-2023 02:01:15 AM
+    Last Modified: 12-19-2023 12:43:20 AM
     Last Updated By: Andrew Laychak
 
     Description: 
@@ -193,6 +193,20 @@ function convertJiraIssuesToLink(jiraOptions: JiraOptions, text: string) {
   return newText;
 }
 
+function convertPullRequestOrIssueToLink(repositoryUrl: string, text: string) {
+  const PULL_REQUEST_OR_ISSUE_REGEX = /\(#(\d+)\)/g;
+
+  const newText = text?.replace(
+    PULL_REQUEST_OR_ISSUE_REGEX,
+    (_match, issue) => {
+      const markdownLink = `[#${issue}](${repositoryUrl}/issues/${issue})`;
+      return `(${markdownLink})`;
+    }
+  );
+
+  return newText;
+}
+
 async function getCommit(
   commit: GroupCommitDetails,
   jiraOptions?: JiraOptions,
@@ -217,6 +231,13 @@ async function getCommit(
 
   if (jiraOptions) {
     renderedTemplate = convertJiraIssuesToLink(jiraOptions, renderedTemplate);
+  }
+
+  if (repositoryUrl) {
+    renderedTemplate = convertPullRequestOrIssueToLink(
+      repositoryUrl,
+      renderedTemplate
+    );
   }
 
   return emoji.emojify(renderedTemplate);

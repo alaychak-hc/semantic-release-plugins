@@ -1,6 +1,6 @@
 {
   "name": "@alaychak-hc/semantic-release-plugins-pnpm",
-  "version": "0.0.008",
+  "version": "0.0.009",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
