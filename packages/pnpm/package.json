@@ -1,6 +1,6 @@
 {
   "name": "@alaychak-hc/semantic-release-plugins-pnpm",
-  "version": "0.0.009",
+  "version": "0.0.0010",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -51,6 +51,7 @@
     "conventional-commits-parser": "^5.0.0",
     "date-fns": "^2.30.0",
     "deepmerge": "^4.3.1",
+    "execa": "^8.0.1",
     "express-handlebars": "^7.1.2",
     "find-up": "^7.0.0",
     "fs-extra": "^11.1.1",

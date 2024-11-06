@@ -5,7 +5,7 @@
   Email: ALaychak@HarrisComputer.com
   
   Created At: 11-28-2023 12:21:39 AM
-  Last Modified: 11-28-2023 12:24:55 AM
+  Last Modified: 12-20-2023 03:08:39 PM
   Last Updated By: Andrew Laychak
   
   Description: Merges the user options with the default options.
@@ -66,7 +66,7 @@ const defaultOptions = {
   },
   msTeamsOptions: {
     webhookUrl: '',
-    notifyInDryRun: true,
+    notifyInDryRun: false,
   },
 };
 // #endregion

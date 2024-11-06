@@ -130,6 +130,9 @@ importers:
       deepmerge:
         specifier: ^4.3.1
         version: 4.3.1
+      execa:
+        specifier: ^8.0.1
+        version: 8.0.1
       express-handlebars:
         specifier: ^7.1.2
         version: 7.1.2

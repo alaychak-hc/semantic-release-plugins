@@ -5,7 +5,7 @@
     Email: ALaychak@harriscomputer.com
 
     Created At: 08-01-2022 09:48:49 AM
-    Last Modified: 12-19-2023 12:43:20 AM
+    Last Modified: 12-20-2023 03:09:46 PM
     Last Updated By: Andrew Laychak
 
     Description: 
@@ -584,7 +584,7 @@ async function generate(
       `Will publish actual release notes in MS Teams after 'prepare' event`
     );
 
-    const notifyInDryRun = options.msTeamsOptions?.notifyInDryRun === true;
+    const notifyInDryRun = options.msTeamsOptions.notifyInDryRun === true;
 
     if (notifyInDryRun) {
       await sendMessage(pluginConfig, context, releaseNotes);

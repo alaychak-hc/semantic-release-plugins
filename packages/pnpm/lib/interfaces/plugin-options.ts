@@ -5,7 +5,7 @@
   Email: ALaychak@HarrisComputer.com
   
   Created At: 11-23-2023 11:41:25 PM
-  Last Modified: 11-28-2023 12:15:39 AM
+  Last Modified: 12-20-2023 12:53:39 PM
   Last Updated By: Andrew Laychak
   
   Description: Type for the plugin options.
@@ -73,6 +73,9 @@ type PluginOptions = {
   commitOptions?: CommitOptions;
   jiraOptions?: JiraOptions;
   changelogOptions?: ChangelogOptions;
+  commandOptions: {
+    [key: string]: string[];
+  };
   sort?: {
     packages?: string[];
     groups?: string[];

@@ -5,7 +5,7 @@
   Email: ALaychak@HarrisComputer.com
   
   Created At: 11-24-2023 01:17:22 AM
-  Last Modified: 11-28-2023 12:51:10 AM
+  Last Modified: 12-20-2023 03:10:11 PM
   Last Updated By: Andrew Laychak
   
   Description: Sends a message to Microsoft Teams.
@@ -29,7 +29,7 @@ function getUrl(
   context: SuccessContextWithOptions
 ) {
   const options = mergeOptions(pluginConfig);
-  const notifyInDryRun = options.msTeamsOptions.notifyInDryRun ?? true;
+  const notifyInDryRun = options.msTeamsOptions.notifyInDryRun;
   const { dryRun } = context.options;
   const { webhookUrl: urlConfig, webhookUrlDryRun: dryRunUrlConfig } =
     options.msTeamsOptions;
