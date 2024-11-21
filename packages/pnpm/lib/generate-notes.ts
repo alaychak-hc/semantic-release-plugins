@@ -5,7 +5,7 @@
     Email: ALaychak@harriscomputer.com
 
     Created At: 08-01-2022 09:48:49 AM
-    Last Modified: 11-21-2024 12:45:12 PM
+    Last Modified: 11-21-2024 12:48:55 PM
     Last Updated By: Andrew Laychak
 
     Description: 
@@ -29,11 +29,7 @@ import path from 'path';
 import { Commit } from 'semantic-release';
 import slash from 'slash';
 import { getCommitDetailsByHash } from './commit-hashes.js';
-import {
-  PluginOptions,
-  TitleOptions,
-  // type SortOptions,
-} from './interfaces/plugin-options.js';
+import { PluginOptions, TitleOptions } from './interfaces/plugin-options.js';
 import { GenerateNotesContextWithOptions } from './interfaces/with-options.js';
 import { mergeOptions } from './merged-options.js';
 import { getDirectory } from './utilities/folder-path.js';
@@ -42,8 +38,6 @@ import { simpleGit } from 'simple-git';
 // #endregion
 
 const commitParser = new CommitParser();
-
-// type NestedObject = Record<string, any>;
 
 type GroupCommitDetails = {
   commit: Commit;
@@ -175,7 +169,6 @@ function convertPullRequestOrIssueToLink(repositoryUrl: string, text: string) {
 async function getCommit(
   commit: GroupCommitDetails,
   context?: GenerateNotesContextWithOptions
-  // _commitOptions: CommitOptions,
 ) {
   let repositoryUrl = context?.options?.repositoryUrl;
   if (repositoryUrl !== undefined) {
@@ -240,47 +233,6 @@ async function parseCommit(commit: Commit, options: PluginOptions) {
   }
 }
 
-/**
- * Sorts an object based on the provided order arrays.
- * @param {Object} data - The data object to sort.
- * @param {Array} typeOrder - The desired order for top-level keys.
- * @param {Array} scopeOrder - The desired order for sub-keys.
- * @returns {Object} - The sorted object.
- */
-// function sortData(data: ReleaseCommits, sortConfig: SortOptions) {
-//   const { types, scopes } = sortConfig;
-
-//   const sortKeys = (keys: string[], order: string[]) => {
-//     return keys.sort((a, b) => {
-//       const indexA = order.indexOf(a);
-//       const indexB = order.indexOf(b);
-//       if (indexA === -1 && indexB === -1) {
-//         return a.localeCompare(b);
-//       }
-//       if (indexA === -1) return 1;
-//       if (indexB === -1) return -1;
-//       return indexA - indexB;
-//     });
-//   };
-
-//   const sortedTypes = sortKeys(Object.keys(data), types ?? []);
-
-//   const sortedData: ReleaseCommits = {};
-
-//   sortedTypes.forEach((type) => {
-//     const typeData = data[type];
-//     if (typeData) {
-//       const sortedScopes = sortKeys(Object.keys(typeData), scopes ?? []);
-//       sortedData[type] = {};
-//       sortedScopes.forEach((scope) => {
-//         sortedData[type][scope] = typeData[scope];
-//       });
-//     }
-//   });
-
-//   return sortedData;
-// }
-
 function getImpactedPackages(
   files: string[],
   options: PluginOptions
@@ -337,25 +289,6 @@ function groupByImpactedPackages(data: ChangeLog[]) {
     return { id, data: groupedData };
   });
 }
-
-// function removeEmptyObjects(obj: NestedObject): NestedObject {
-//   const result: NestedObject = {};
-
-//   for (const key in obj) {
-//     const value = obj[key];
-
-//     if (typeof value === 'object' && value !== null) {
-//       const cleanedObject = removeEmptyObjects(value as NestedObject);
-//       if (Object.keys(cleanedObject).length > 0) {
-//         result[key] = cleanedObject;
-//       }
-//     } else {
-//       result[key] = value;
-//     }
-//   }
-
-//   return result;
-// }
 
 // #region Generate
 async function generate(
@@ -519,41 +452,6 @@ async function generate(
           releaseCommits[commitType][commitScope] = sortedObject;
         }
       }
-
-      // titles.add(commitTitle);
-
-      // const commitText = await getCommit(commit, context);
-
-      // releaseNotes += `\n${commitText}`;
-
-      // if (commit.ccCommit.scope) {
-      //   uniqueScopes.add(commit.ccCommit.scope);
-
-      //   if (!changelogData[commit.ccCommit.scope]) {
-      //     changelogData[commit.ccCommit.scope] = [
-      //       {
-      //         title: formattedGroupTitle,
-      //         commits: [commitText],
-      //       },
-      //     ];
-      //   } else {
-      //     const changelogCommitData = changelogData[commit.ccCommit.scope].find(
-      //       (group) => group.title === formattedGroupTitle
-      //     );
-
-      //     if (changelogCommitData === undefined) {
-      //       changelogData[commit.ccCommit.scope] = [
-      //         ...changelogData[commit.ccCommit.scope],
-      //         {
-      //           title: formattedGroupTitle,
-      //           commits: [commitText],
-      //         },
-      //       ];
-      //     } else {
-      //       changelogCommitData.commits.push(commitText);
-      //     }
-      //   }
-      // }
     }
   };
 
@@ -688,166 +586,6 @@ async function generate(
       }
     }
   }
-
-  // const sortedReleaseCommits = sortData(releaseCommits, options.sort);
-  // const removedEmptyObjects = removeEmptyObjects(sortedReleaseCommits);
-  // console.log(JSON.stringify(sortedReleaseCommits, null, 2));
-  // console.dir(sortedReleaseCommits);
-
-  // for (const type in removedEmptyObjects) {
-  //   const typeData = removedEmptyObjects[type];
-
-  //   for (const scope in typeData) {
-  //     const scopeData = typeData[scope];
-
-  //     for (const title in scopeData) {
-  //       const titleData = scopeData[title];
-  //       for (const commit of titleData) {
-  //         console.dir(commit);
-  //       }
-  //     }
-  //   }
-  // }
-
-  // const updateChangelog = async (scope: string) => {
-  //   let directory = options.cwd;
-  //   let changelogFilename = 'CHANGELOG';
-  //   if (scope === 'root') {
-  //     changelogFilename = 'CHANGELOG_ROOT';
-  //   } else {
-  //     directory = path.join(options.cwd, scope);
-  //   }
-
-  //   const isScopeIgnored = options.ignore?.scopes?.includes(scope);
-  //   if (isScopeIgnored) {
-  //     return;
-  //   }
-
-  //   fs.ensureFile(path.join(directory, `${changelogFilename}.md`));
-
-  //   const sortedChangelogData = sortChangelogData(
-  //     changelogData,
-  //     options.sort?.packages || []
-  //   );
-
-  //   const changelogDataForScope = sortedChangelogData[scope];
-  //   if (changelogDataForScope === undefined) {
-  //     return;
-  //   }
-
-  //   const changelogNewText = changelogDataForScope.reduce(
-  //     (previousValue, currentValue) => {
-  //       const formattedGroupTitle = currentValue.title;
-  //       const formattedCommits = currentValue.commits.join('\n');
-
-  //       return `${previousValue}\n${formattedGroupTitle}\n\n${formattedCommits}\n`;
-  //     },
-  //     ''
-  //   );
-
-  //   const changelogPath = path.join(directory, `${changelogFilename}.md`);
-  //   const changelogText =
-  //     fs.existsSync(changelogPath) === false
-  //       ? ''
-  //       : fs.readFileSync(changelogPath, 'utf8');
-
-  //   if (changelogText === '') {
-  //     const newChangelogText = `${releaseNotesTitle}\n${changelogNewText}`;
-  //     await fs.writeFile(changelogPath, newChangelogText);
-
-  //     if (!isDryRunMode) {
-  //       await git.add(changelogPath);
-  //     } else {
-  //       logger.log(`Skippping git add for ${changelogPath}`);
-  //     }
-  //     return;
-  //   }
-
-  //   // const newChangelogText = `${releaseNotesTitle}\n${changelogNewText}\n${changelogText}`;
-  //   // await fs.writeFile(changelogPath, newChangelogText);
-
-  //   // if (!isDryRunMode) {
-  //   //   await git.add(changelogPath);
-  //   // } else {
-  //   //   logger.log(`Skippping git add for ${changelogPath}`);
-  //   // }
-  // };
-
-  // const scopes = Array.from(uniqueScopes);
-  // await pMap(scopes, updateChangelog, {
-  //   concurrency: 1,
-  // });
-
-  // let newChangelogTextAll = '';
-  // const rootChangelogPath = path.join(options.cwd, 'CHANGELOG.md');
-
-  // const updateChangelogAll = async (scope: string, index: number) => {
-  //   const packageTitle = options.titleOptions?.groups?.[scope] || scope;
-  //   let formattedPackageTitle = await formatGroupTitle(packageTitle);
-  //   formattedPackageTitle = formattedPackageTitle.replace(
-  //     packageTitle,
-  //     `**${packageTitle}**`
-  //   );
-
-  //   const packageChangelogData = changelogData[scope];
-
-  //   if (index === 0) {
-  //     newChangelogTextAll += `${releaseNotesTitle}\n\n`;
-  //   }
-
-  //   newChangelogTextAll += `${formattedPackageTitle}\n\n`;
-
-  //   packageChangelogData.forEach((group, index) => {
-  //     newChangelogTextAll += `${group.title}\n\n${group.commits.join('\n')}`;
-
-  //     if (index !== packageChangelogData.length - 1) {
-  //       newChangelogTextAll += '\n\n';
-  //     } else if (index === packageChangelogData.length - 1) {
-  //       newChangelogTextAll += '\n';
-  //     }
-  //   });
-
-  //   if (index !== scopes.length - 1) {
-  //     newChangelogTextAll += '\n';
-  //   }
-  // };
-
-  // fs.ensureFile(rootChangelogPath);
-
-  // await pMap(scopes, updateChangelogAll, {
-  //   concurrency: 1,
-  // });
-
-  // const rootChangelogText =
-  //   fs.existsSync(rootChangelogPath) === false
-  //     ? ''
-  //     : fs.readFileSync(rootChangelogPath, 'utf8');
-
-  // if (rootChangelogText === '') {
-  //   await fs.writeFile(rootChangelogPath, newChangelogTextAll);
-  // } else {
-  //   const newChangelogTextAll2 = `${newChangelogTextAll}\n${rootChangelogText}`;
-  //   await fs.writeFile(rootChangelogPath, newChangelogTextAll2);
-  // }
-
-  // if (!isDryRunMode) {
-  //   await git.add(rootChangelogPath);
-  // } else {
-  //   logger.log(`Skippping git add for ${rootChangelogPath}`);
-  // }
-
-  // if (!isDryRunMode) {
-  //   git
-  //     .commit('docs: Update CHANGELOG.md [skip ci]', {
-  //       '--author':
-  //         '"semantic-release-bot <semantic-release-bot@martynus.net>"',
-  //     })
-  //     .then(() => {
-  //       git.push();
-  //     });
-  // } else {
-  //   logger.log(`Skippping git commit and push for CHANGELOG.md`);
-  // }
 
   process.env.HAS_PREVIOUS_SEM_REL_EXECUTION = 'true';
 
