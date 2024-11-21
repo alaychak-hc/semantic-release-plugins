@@ -5,7 +5,7 @@
   Email: ALaychak@HarrisComputer.com
   
   Created At: 11-23-2023 11:41:25 PM
-  Last Modified: 12-20-2023 12:53:39 PM
+  Last Modified: 11-20-2024 04:14:48 PM
   Last Updated By: Andrew Laychak
   
   Description: Type for the plugin options.
@@ -21,7 +21,10 @@ type TitleOptions = {
   name: string;
   includeCompareLink: boolean;
   date: string;
-  groups?: {
+  types?: {
+    [key: string]: string;
+  };
+  scopes?: {
     [key: string]: string;
   };
 };
@@ -43,45 +46,35 @@ type CommitOptions = {
 };
 // #endregion
 
-// #region Jira Options
-type JiraOptions = {
-  host: string;
-  ticketPrefixes: string[];
-};
-// #endregion
-
-type ChangelogOptions = {
-  [key: string]: {
-    enabled?: boolean;
-  };
+type Package = {
+  id: string;
+  title: string;
+  location?: string;
 };
 
-type MsTeamsOptions = {
-  webhookUrl: string;
-  webhookUrlDryRun?: string;
-  title?: string;
-  imageUrl?: string;
-  showContributors?: boolean;
-  notifyInDryRun?: boolean;
+type Ignore = {
+  packages?: string[];
+  scopes?: string[];
+  types?: string[];
+};
+
+type SortOptions = {
+  packages?: string[];
+  scopes?: string[];
+  types?: string[];
 };
 
 // #region Plugin Options
 type PluginOptions = {
   cwd?: string;
-  includeAll?: boolean;
+  packages: Package[];
+  sort?: SortOptions;
+  ignore?: Ignore;
+
   titleOptions?: TitleOptions;
-  commitOptions?: CommitOptions;
-  jiraOptions?: JiraOptions;
-  changelogOptions?: ChangelogOptions;
-  commandOptions: {
+  commandOptions?: {
     [key: string]: string[];
   };
-  sort?: {
-    packages?: string[];
-    groups?: string[];
-    commits?: string[];
-  };
-  msTeamsOptions?: MsTeamsOptions;
 };
 // #endregion
 
@@ -90,7 +83,7 @@ export type {
   TitleOptions,
   CommitOptions,
   GroupOptions,
-  JiraOptions,
   PluginOptions,
+  SortOptions,
 };
 // #endregion

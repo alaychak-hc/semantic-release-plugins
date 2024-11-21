@@ -5,7 +5,7 @@
   Email: ALaychak@HarrisComputer.com
   
   Created At: 11-28-2023 12:21:39 AM
-  Last Modified: 12-20-2023 03:08:39 PM
+  Last Modified: 11-08-2024 12:19:24 PM
   Last Updated By: Andrew Laychak
   
   Description: Merges the user options with the default options.
@@ -17,56 +17,27 @@
 // #endregion
 
 // #region Imports
-import { PluginOptions } from './interfaces/plugin-options';
+import { PluginOptions } from './interfaces/plugin-options.js';
 import merge from 'deepmerge';
 import { format } from 'date-fns';
 // #endregion
 
 // #region Default Options
-const defaultOptions = {
-  includeAll: false,
+const defaultOptions: PluginOptions = {
   titleOptions: {
     name: 'Release Notes',
     includeCompareLink: true,
     date: 'yyyy-MM-dd',
   },
-  commitOptions: {
-    groupByScope: true,
-    groups: [
-      {
-        id: 'fixes',
-        type: 'fix',
-        section: ':bug: Fixes',
-      },
-      {
-        id: 'refactor',
-        type: 'refactor',
-        section: ':bug: Refactor',
-      },
-      {
-        id: 'documentation',
-        type: 'docs',
-        section: ':sparkles: Documentation',
-      },
-      {
-        id: 'build',
-        type: 'build',
-        section: ':building_construction: Build',
-      },
-      {
-        id: 'chores',
-        type: 'chore',
-        section: ':sparkles: Chores',
-      },
-    ],
-  },
+  packages: [
+    {
+      id: 'root',
+      title: 'Root',
+    },
+  ],
   sort: {
-    groups: ['fixes', 'refactor', 'documentation', 'build', 'chores'],
-    commits: ['fix', 'refactor', 'docs', 'build', 'chore'],
-  },
-  msTeamsOptions: {
-    webhookUrl: '',
-    notifyInDryRun: false,
+    scopes: ['fixes', 'refactor', 'documentation', 'build', 'chores'],
+    types: ['fix', 'refactor', 'docs', 'build', 'chore'],
   },
 };
 // #endregion

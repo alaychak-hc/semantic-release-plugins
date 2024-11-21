@@ -12,7 +12,6 @@
     "yatki.vscode-surround",
     "gruntfuggly.todo-tree",
     "mattpocock.ts-error-translator",
-    "github.vscode-github-actions",
-    "zixuanchen.vitest-explorer"
+    "github.vscode-github-actions"
   ]
 }
