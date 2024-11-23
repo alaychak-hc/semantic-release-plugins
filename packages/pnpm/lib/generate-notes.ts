@@ -5,7 +5,7 @@
     Email: ALaychak@harriscomputer.com
 
     Created At: 08-01-2022 09:48:49 AM
-    Last Modified: 11-21-2024 01:04:59 PM
+    Last Modified: 11-22-2024 10:27:55 PM
     Last Updated By: Andrew Laychak
 
     Description: 
@@ -168,8 +168,10 @@ function convertPullRequestOrIssueToLink(repositoryUrl: string, text: string) {
 
 async function getCommit(
   commit: GroupCommitDetails,
-  context?: GenerateNotesContextWithOptions
+  context: GenerateNotesContextWithOptions,
+  pluginConfig: PluginOptions
 ) {
+  const { jiraOptions } = pluginConfig;
   let repositoryUrl = context?.options?.repositoryUrl;
   if (repositoryUrl !== undefined) {
     repositoryUrl = repositoryUrl
@@ -181,7 +183,25 @@ async function getCommit(
     path.join(getDirectory(import.meta.url), 'templates/commit.hbs')
   );
 
+  let newSubject = commit.ccCommit.subject?.replace('[skip ci]', '').trim();
+  if (jiraOptions) {
+    const { host, ticketPrefixes } = jiraOptions;
+    const issueRegex = new RegExp(
+      `(\\[)?(${ticketPrefixes.join('|')}-[1-9][0-9]*)(\\])?`,
+      'g'
+    );
+
+    newSubject = newSubject?.replace(
+      issueRegex,
+      (_match, bracketStart, issue, bracketEnd) => {
+        const markdownLink = `[${issue}](${host}/browse/${issue})`;
+        return bracketStart && bracketEnd ? `[${markdownLink}]` : markdownLink;
+      }
+    );
+  }
+
   let renderedTemplate = await viewInstance.render(titleTemplatePath, {
+    subject: newSubject,
     commit,
     repositoryUrl,
   });
@@ -479,6 +499,8 @@ async function generate(
   });
 
   const groupedChangelogCommitsByTitle = groupByImpactedPackages(changelogs);
+
+  console.log(JSON.stringify(groupedChangelogCommitsByTitle, null, 2));
   for (const changelog of groupedChangelogCommitsByTitle) {
     let file = 'CHANGELOG.md';
     if (changelog.id === 'root') {
@@ -541,7 +563,8 @@ async function generate(
                   ccCommit: data.commit.ccCommit,
                   files: [],
                 },
-                newContext
+                newContext,
+                pluginConfig
               );
 
               changelogNewText += `${commitText}\n`;

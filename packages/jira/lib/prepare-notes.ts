@@ -11,7 +11,7 @@ async function prepareNotes(
   pluginConfig: PluginOptions,
   context: PrepareContextWithOptions
 ) {
-  const { jiraHost, ticketPrefixes } = pluginConfig;
+  const { host, ticketPrefixes } = pluginConfig;
 
   let notes = await generateNotes(pluginConfig, context);
   let { nextRelease } = context;
@@ -35,7 +35,7 @@ async function prepareNotes(
   const newNotes = notes?.replace(
     issueRegex,
     (_match, bracketStart, issue, bracketEnd) => {
-      const markdownLink = `[${issue}](${jiraHost}/browse/${issue})`;
+      const markdownLink = `[${issue}](${host}/browse/${issue})`;
       return bracketStart && bracketEnd ? `[${markdownLink}]` : markdownLink;
     }
   );

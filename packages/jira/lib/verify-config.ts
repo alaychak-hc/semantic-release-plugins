@@ -14,7 +14,7 @@ function verifyConfiguration(
   pluginConfig: PluginOptions,
   _context: VerifyConditionsContext
 ) {
-  const { jiraHost, ticketPrefixes } = pluginConfig;
+  const { host, ticketPrefixes } = pluginConfig;
 
   const errors = [];
 
@@ -28,10 +28,10 @@ function verifyConfiguration(
     }
   }
 
-  if (!jiraHost) {
-    errors.push(new InputRequiredError(jiraHost));
-  } else if (!DOMAIN_NAME_REGEX.test(jiraHost)) {
-    errors.push(new RegexError(jiraHost, DOMAIN_NAME_REGEX));
+  if (!host) {
+    errors.push(new InputRequiredError(host));
+  } else if (!DOMAIN_NAME_REGEX.test(host)) {
+    errors.push(new RegexError(host, DOMAIN_NAME_REGEX));
   }
 
   if (errors.length > 0) {

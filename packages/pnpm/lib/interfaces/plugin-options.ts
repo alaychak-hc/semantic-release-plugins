@@ -5,7 +5,7 @@
   Email: ALaychak@HarrisComputer.com
   
   Created At: 11-23-2023 11:41:25 PM
-  Last Modified: 11-20-2024 04:14:48 PM
+  Last Modified: 11-22-2024 10:08:29 PM
   Last Updated By: Andrew Laychak
   
   Description: Type for the plugin options.
@@ -74,6 +74,10 @@ type PluginOptions = {
   titleOptions?: TitleOptions;
   commandOptions?: {
     [key: string]: string[];
+  };
+  jiraOptions?: {
+    host: string;
+    ticketPrefixes: string[];
   };
 };
 // #endregion

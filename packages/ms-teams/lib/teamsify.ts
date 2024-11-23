@@ -5,7 +5,7 @@
   Email: ALaychak@HarrisComputer.com
   
   Created At: 11-24-2023 01:18:47 AM
-  Last Modified: 11-22-2024 09:41:57 PM
+  Last Modified: 11-22-2024 10:13:28 PM
   Last Updated By: Andrew Laychak
   
   Description: Sends a message to Microsoft Teams.
@@ -100,7 +100,6 @@ function extractSections(context: VerifyReleaseContext) {
     sections: [],
   };
   const tree = remark.parse(context.nextRelease.notes);
-  console.dir(tree, { depth: null });
 
   for (let i = 0; i < tree.children.length - 1; i++) {
     const child = tree.children[i];
