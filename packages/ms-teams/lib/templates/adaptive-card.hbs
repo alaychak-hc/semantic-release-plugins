@@ -1,0 +1,78 @@
+{
+  "type": "AdaptiveCard",
+  "body": [
+    {
+      "type": "TextBlock",
+      "text": "{{title}}",
+      "weight": "Bolder",
+      "size": "ExtraLarge",
+      "wrap": true
+    },
+    {{#each sections}}
+    {
+      "type": "Container",
+      "style": "emphasis",
+      "items": [
+        {
+          "type": "TextBlock",
+          "text": "{{this.type}}",
+          "weight": "Bolder",
+          "size": "ExtraLarge",
+          "wrap": true,
+          "style": "heading"
+        }
+      ],
+      "spacing": "ExtraLarge",
+      "bleed": true
+    },
+    {
+      "type": "Container",
+      "items": [
+        {{#each this.scopes}}
+        {
+          "type": "TextBlock",
+          "text": "{{this.title}}",
+          "weight": "Bolder",
+          "size": "Large",
+          "spacing": "Small",
+          "wrap": true
+        },
+        {
+          "type": "Container",
+          "items": [
+            {{#each this.items}}
+            {
+              "type": "TextBlock",
+              "text": "_{{this.title}}_",
+              "weight": "Default",
+              "size": "Default",
+              "spacing": "Small",
+              "wrap": true
+            },
+            {
+              "type": "Container",
+              "items": [
+                {{#each this.commits}}
+                {
+                  "type": "TextBlock",
+                  "text": "- {{this}}",
+                  "wrap": true,
+                  "spacing": "None"
+                }{{#unless @last}},{{/unless}}
+                {{/each}}
+              ]
+            }{{#unless @last}},{{/unless}}
+            {{/each}}
+          ]
+        }{{#unless @last}},{{/unless}}
+        {{/each}}
+      ]
+    }{{#unless @last}},{{/unless}}
+    {{/each}}
+  ],
+  "msteams": {
+    "width": "Full"
+  },
+  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+  "version": "1.5"
+}

@@ -5,7 +5,7 @@
     Email: ALaychak@harriscomputer.com
 
     Created At: 08-01-2022 09:48:49 AM
-    Last Modified: 11-21-2024 12:48:55 PM
+    Last Modified: 11-21-2024 01:04:59 PM
     Last Updated By: Andrew Laychak
 
     Description: 
@@ -576,6 +576,10 @@ async function generate(
         logger.log(`Skippping git add for ${changelogPath}`);
       }
     } else {
+      if (changelog.id === 'full') {
+        releaseNotes = `${releaseNotesTitle}\n\n${changelogNewText}`;
+      }
+
       const newChangelogText = `${releaseNotesTitle}\n${changelogNewText}\n${changelogText}`;
       await fs.writeFile(changelogPath, newChangelogText);
 
@@ -585,6 +589,19 @@ async function generate(
         logger.log(`Skippping git add for ${changelogPath}`);
       }
     }
+  }
+
+  if (!isDryRunMode) {
+    git
+      .commit('docs(release): Updated changelogs [skip ci]', {
+        '--author':
+          '"semantic-release-bot <semantic-release-bot@martynus.net>"',
+      })
+      .then(() => {
+        git.push();
+      });
+  } else {
+    logger.log(`Skippping git commit and push for changelogs`);
   }
 
   process.env.HAS_PREVIOUS_SEM_REL_EXECUTION = 'true';
