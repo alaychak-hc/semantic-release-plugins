@@ -5,7 +5,7 @@
   Email: ALaychak@HarrisComputer.com
   
   Created At: 11-24-2023 01:17:22 AM
-  Last Modified: 11-22-2024 03:23:12 PM
+  Last Modified: 11-22-2024 09:42:18 PM
   Last Updated By: Andrew Laychak
   
   Description: Sends a message to Microsoft Teams.
@@ -87,7 +87,6 @@ async function sendMessage(
         },
       ],
     });
-    // body = JSON.stringify(await teamsify(pluginConfig, context));
   } catch (e) {
     const message = 'An error occurred while parsing the release notes.';
     logger.error(message);
