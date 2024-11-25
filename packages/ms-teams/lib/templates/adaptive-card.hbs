@@ -8,6 +8,28 @@
       "size": "ExtraLarge",
       "wrap": true
     },
+    {
+        "type": "FactSet",
+        "facts": [
+            {
+                "title": "Total Changes:",
+                "value": "{{totalChanges}}"
+            }
+        ]
+    },
+    {
+        "type": "TextBlock",
+        "text": "Changes By:",
+        "wrap": true,
+        "weight": "Bolder"
+    },
+    {{#each users}}
+    {
+        "type": "TextBlock",
+        "text": "- {{this}}",
+        "wrap": true
+    },
+    {{/each}}
     {{#each sections}}
     {
       "type": "Container",

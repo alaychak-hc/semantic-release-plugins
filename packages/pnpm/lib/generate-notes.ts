@@ -5,7 +5,7 @@
     Email: ALaychak@harriscomputer.com
 
     Created At: 08-01-2022 09:48:49 AM
-    Last Modified: 11-22-2024 10:27:55 PM
+    Last Modified: 11-25-2024 12:44:59 PM
     Last Updated By: Andrew Laychak
 
     Description: 
@@ -500,6 +500,9 @@ async function generate(
 
   const groupedChangelogCommitsByTitle = groupByImpactedPackages(changelogs);
 
+  let totalCommits = 0;
+  let users = new Set<string>();
+
   console.log(JSON.stringify(groupedChangelogCommitsByTitle, null, 2));
   for (const changelog of groupedChangelogCommitsByTitle) {
     let file = 'CHANGELOG.md';
@@ -557,6 +560,12 @@ async function generate(
 
           if (impactedPackagesData) {
             for (const data of impactedPackagesData) {
+              if (changelog.id === 'full') {
+                totalCommits += 1;
+
+                users.add(data.commit.commit.author.name);
+              }
+
               const commitText = await getCommit(
                 {
                   commit: data.commit.commit,
@@ -584,6 +593,7 @@ async function generate(
         ? ''
         : fs.readFileSync(changelogPath, 'utf8');
 
+    // changesBy = [...users].map((user) => `- ${user}`).join('\n');
     if (changelogText === '') {
       const newChangelogText = `${releaseNotesTitle}\n\n${changelogNewText}`;
 
@@ -627,6 +637,10 @@ async function generate(
     logger.log(`Skippping git commit and push for changelogs`);
   }
 
+  process.env.MS_TEAMS_RELEASE_NOTES_DETAILS = JSON.stringify({
+    totalChanges: totalCommits,
+    users: [...users],
+  });
   process.env.HAS_PREVIOUS_SEM_REL_EXECUTION = 'true';
 
   return releaseNotes;

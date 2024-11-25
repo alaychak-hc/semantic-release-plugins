@@ -5,7 +5,7 @@
   Email: ALaychak@HarrisComputer.com
   
   Created At: 11-24-2023 01:18:47 AM
-  Last Modified: 11-22-2024 10:13:28 PM
+  Last Modified: 11-25-2024 12:25:48 PM
   Last Updated By: Andrew Laychak
   
   Description: Sends a message to Microsoft Teams.
@@ -85,8 +85,13 @@ async function generateMicrosoftTeamsMessage(data: AdaptiveCard) {
     path.join(import.meta.dirname, 'templates/adaptive-card.hbs')
   );
 
+  const releaseNotesDetails = JSON.parse(
+    process.env.MS_TEAMS_RELEASE_NOTES_DETAILS || '{}'
+  );
+
   const renderedTemplate = await viewInstance.render(groupTitleTemplatePath, {
     ...data,
+    ...releaseNotesDetails,
   });
 
   return JSON.parse(renderedTemplate);
